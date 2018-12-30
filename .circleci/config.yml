@@ -14,10 +14,10 @@ jobs:
           command: gem list
       - run:
           name: Linting
-          command: ruby-lint *.rb
-      - run:
-          name: Style/Syntax Checking
-          command: rubocop
+          command: ls -la
+      # - run:
+      #     name: Style/Syntax Checking
+      #     command: rubocop
 
   bundle_and_upload:
     <<: *defaults
