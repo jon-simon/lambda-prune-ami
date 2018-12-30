@@ -10,6 +10,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Checking Gems
+          command: gem list
+      - run:
           name: Linting
           command: ruby-lint *.rb
       - run:
@@ -20,16 +23,47 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+            # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+      - run:
+
       - run:
           name: Bundle And Upload
           command: placeholder
 
-workflows:
-  version: 2
-  commit:
-    jobs:
-      - lint_and_style
-      - bundle_and_zip:
-          requires:
-            - lint_and_style
 
+
+##### Examples
+#       # run tests!
+#       - run:
+#           name: run tests
+#           command: |
+#             mkdir /tmp/test-results
+#             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+
+#             bundle exec rspec --format progress \
+#                             --format RspecJunitFormatter \
+#                             --out /tmp/test-results/rspec.xml \
+#                             --format progress \
+#                             $TEST_FILES
+
+#       # collect reports
+#       - store_test_results:
+#           path: /tmp/test-results
+#       - store_artifacts:
+#           path: /tmp/test-results
+#           destination: test-results
