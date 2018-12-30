@@ -1,0 +1,35 @@
+defaults: &defaults
+  docker:
+    - image: 552172703831.dkr.ecr.us-west-2.amazonaws.com/infra-tools:latest
+  working_directory: ~/app
+
+version: 2
+jobs:
+  lint_and_style:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Linting
+          command: ruby-lint *.rb
+      - run:
+          name: Style/Syntax Checking
+          command: rubocop
+
+  bundle_and_upload:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Bundle And Upload
+          command: placeholder
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - lint_and_style
+      - bundle_and_zip:
+          requires:
+            - lint_and_style
+
