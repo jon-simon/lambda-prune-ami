@@ -11,7 +11,7 @@ jobs:
       - checkout
       - run:
           name: something different
-          command: /etc/profile.d/chef_ruby.sh
+          command: eval "$(chef shell-init bash)"
       - run:
           name: Linting
           command: which ruby && ruby --version
