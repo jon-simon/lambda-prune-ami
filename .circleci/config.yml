@@ -10,14 +10,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: something different
-          command: echo $PATH
-      - run:
-          name: Linting
-          command: which ruby && ruby --version
-      # - run:
-      #     name: Style/Syntax Checking
-      #     command: rubocop
+          name: Fixing
+          command: |
+            whoami
+            which ruby
+            ruby --version
+            which chef
+            chef --version
+            ls -la /opt
 
   bundle_and_upload:
     <<: *defaults
