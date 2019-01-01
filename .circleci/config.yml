@@ -16,19 +16,10 @@ jobs:
          name: Style/Syntax Checking
          command: rubocop
 
-  bundle_and_upload:
-   <<: *defaults
-   steps:
-     - checkout
-     - run:
-         name: Bundle And Upload
-         command: placeholder
 
 workflows:
  version: 2
  commit:
    jobs:
      - lint_and_style
-     - bundle_and_upload:
-         requires:
-           - lint_and_style
+
