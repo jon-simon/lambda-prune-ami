@@ -10,11 +10,11 @@ jobs:
    steps:
      - checkout
      - run:
-         name: WTF
-         command: |
-          ruby --version
-          gem --version
-          gem list
+         name: Linting
+         command: ruby-lint *.rb
+     - run:
+         name: Style/Syntax Checking
+         command: rubocop
 
 
 workflows:
