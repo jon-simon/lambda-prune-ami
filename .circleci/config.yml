@@ -1,76 +1,34 @@
 defaults: &defaults
-  docker:
-    - image: 552172703831.dkr.ecr.us-west-2.amazonaws.com/infra-tools:latest
-  working_directory: ~/app
+ docker:
+   - image: 552172703831.dkr.ecr.us-west-2.amazonaws.com/infra-tools:latest
+ working_directory: ~/app
 
 version: 2
 jobs:
-  lint_and_style:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: Fixing
-          command: |
-            whoami
-            which ruby
-            ruby --version
-            which chef
-            chef --version
-            ls -la /opt
+ lint_and_style:
+   <<: *defaults
+   steps:
+     - checkout
+     - run:
+         name: Linting
+         command: ruby-lint *.rb
+     - run:
+         name: Style/Syntax Checking
+         command: rubocop
 
   bundle_and_upload:
-    <<: *defaults
-    steps:
-      - checkout
-            # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-      - run:
-
-      - run:
-          name: Bundle And Upload
-          command: placeholder
+   <<: *defaults
+   steps:
+     - checkout
+     - run:
+         name: Bundle And Upload
+         command: placeholder
 
 workflows:
-  version: 2
-  commit:
-    jobs:
-      - lint_and_style
-      - bundle_and_upload:
-          requires:
-            - lint_and_style
-
-##### Examples
-#       # run tests!
-#       - run:
-#           name: run tests
-#           command: |
-#             mkdir /tmp/test-results
-#             TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-
-#             bundle exec rspec --format progress \
-#                             --format RspecJunitFormatter \
-#                             --out /tmp/test-results/rspec.xml \
-#                             --format progress \
-#                             $TEST_FILES
-
-#       # collect reports
-#       - store_test_results:
-#           path: /tmp/test-results
-#       - store_artifacts:
-#           path: /tmp/test-results
-#           destination: test-results
+ version: 2
+ commit:
+   jobs:
+     - lint_and_style
+     - bundle_and_zip:
+         requires:
+           - lint_and_style
