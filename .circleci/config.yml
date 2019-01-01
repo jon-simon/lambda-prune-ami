@@ -29,6 +29,6 @@ workflows:
  commit:
    jobs:
      - lint_and_style
-     - bundle_and_zip:
+     - bundle_and_upload:
          requires:
            - lint_and_style
