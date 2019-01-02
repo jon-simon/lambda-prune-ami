@@ -48,14 +48,17 @@ workflows:
      - lint
      - style
      - unit
+     - hold:
+          type: approval
+          requires:
+           - lint
+           - style
+           - unit
      - build_and_deploy:
         filters:
           branches:
             only:
               - master
         requires:
-          - lint
-          - style
-          - unit
           - hold
 
