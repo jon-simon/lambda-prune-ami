@@ -5,21 +5,57 @@ defaults: &defaults
 
 version: 2
 jobs:
- lint_and_style:
+ lint:
    <<: *defaults
    steps:
      - checkout
      - run:
-         name: Linting
-         command: ruby-lint *.rb
+        name: RubyLint
+        command: echo "this is where you should lint"
      - run:
-         name: Style/Syntax Checking
+         name: Rubocop
          command: rubocop
+
+  style:
+     <<: *defaults
+     steps:
+       - checkout
+       - run:
+          name: Rubocop
+          command: rubocop
+
+  unit:
+     <<: *defaults
+     steps:
+       - checkout
+       - run:
+          name: RSpec
+          command: echo "this is where you should unit test"
+
+  build_and_deploy:
+     <<: *defaults
+     steps:
+       - checkout
+       - run:
+          name: RSpec
+          command: echo "this is where you should unit test"
 
 
 workflows:
  version: 2
  commit:
    jobs:
-     - lint_and_style
+     - lint
+     - style
+     - unit
+     - build_and_deploy:
+        filters:
+          branches:
+            only:
+              - master
+        requires:
+          - lint
+          - style
+          - unit
+          - hold
 
