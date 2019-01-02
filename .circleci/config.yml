@@ -19,7 +19,10 @@ jobs:
        - checkout
        - run:
           name: Rubocop
-          command: rubocop
+          command: |
+            ls -la
+            rubocop
+
 
   unit:
      <<: *defaults
