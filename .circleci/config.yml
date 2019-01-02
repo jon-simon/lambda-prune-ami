@@ -12,9 +12,6 @@ jobs:
       - run:
          name: RubyLint
          command: echo "this is where you should lint"
-      - run:
-         name: Rubocop
-         command: rubocop
 
   style:
      <<: *defaults
@@ -37,8 +34,11 @@ jobs:
      steps:
        - checkout
        - run:
-          name: RSpec
-          command: echo "this is where you should unit test"
+          name: Bundle, Zip, and Upload to S3
+          command: |
+            echo 'running bundler install command'
+            echo 'zipping up the scripts and vendor directories'
+            echo 'uploading to an s3 bucket for lambda deployment'
 
 
 workflows:
