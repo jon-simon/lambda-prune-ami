@@ -5,14 +5,14 @@ defaults: &defaults
 
 version: 2
 jobs:
- lint:
-   <<: *defaults
-   steps:
-     - checkout
-     - run:
-        name: RubyLint
-        command: echo "this is where you should lint"
-     - run:
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+         name: RubyLint
+         command: echo "this is where you should lint"
+      - run:
          name: Rubocop
          command: rubocop
 
